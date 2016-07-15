@@ -1,0 +1,22 @@
+quintana roo
+
+PD0665
+PD0300
+PD057
+PD442
+
+
+villahermosa
+
+PD477
+PD327
+PD183
+PD268
+PD402
+PD471
+
+
+//cemex database
+
+user: robb
+passWord: tp8MMJupTtSVvWcP

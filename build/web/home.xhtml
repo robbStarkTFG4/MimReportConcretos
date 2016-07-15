@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./template.xhtml">
+
+
+
+            <ui:define name="content">
+                <h:form id="homeForm">
+
+                    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
+
+                        <div class="row" style="margin-top: 20px;margin-bottom: 10px">
+                            <div class="col-xs-12 col-md-7 col-lg-4">
+                                <div class="panel panel-red panel-widget">
+                                    <div class="row no-padding" > 
+                                        <div class="col-sm-3 col-lg-5 widget-left">
+                                            <svg class="glyph stroked app-window-with-content"><use href="#stroked-app-window-with-content"></use></svg>
+                                        </div>
+                                        <div class="col-sm-9 col-lg-7 widget-right" >
+                                            <div class="large">#{home.cantidad}</div>
+                                            <div class="text-muted">Cantidad Trabajos</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 70px">
+
+                            <p:dataTable id="ordenesTable" var="order" value="#{home.recentOrders}" selectionMode="single"  reflow="true"
+                                         selection="#{home.current}" rowKey="#{order.idorden}"  
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         >
+                                <f:facet name="header">
+                                    <h3>AGREGADOS RECIENTEMENTE</h3>
+                                </f:facet>
+                                <p:ajax event="rowSelect" listener="#{home.onRowSelect}" oncomplete="PF('carDialog').show()" update="homeForm:dialogito"  />
+
+                                <p:column headerText="Numero">
+                                    <h:outputText value="#{order.numeroOrden}" />
+                                    <h:outputText  />
+                                </p:column>
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{order.startDate}" />
+                                </p:column>
+                                <p:column headerText="descripcion">
+                                    <h:outputText value="#{order.descripcion}" />
+                                </p:column>
+                                <p:column headerText="Encargado">
+                                    <h:outputText value="#{order.encargado}" />
+                                </p:column>
+                                <p:column headerText="Prioridad">
+                                    <h:outputText value="#{order.prioridad}" />
+                                </p:column>
+                            </p:dataTable>
+
+                        </div>
+                    </div>    
+
+                    <p:dialog header="Orden Info"  id="dialogito" widgetVar="carDialog" style="width:  70% !important;height: 80% !important" modal="true"  responsive="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:scrollPanel mode="native" style=" width: 90% !important;padding-bottom: 20px;max-height:400px !important;margin-bottom: 30px !important;text-align:center;">
+
+                            <p:panelGrid  columns="3" rendered="#{not empty home.current}" style="width: 98%">
+                                <h:outputText value="NUMERO ORDEN" style="font-weight: bold"/>
+                                <h:outputText value="PRIORIDAD" style="font-weight: bold"/>
+                                <h:outputText value="FECHA "  style="font-weight: bold"/>
+                                <h:outputText value="#{home.current.numeroOrden}" />
+
+
+                                <h:outputText value="#{home.current.prioridad}" />
+
+
+                                <h:outputText value="#{home.current.startDate}" />
+                            </p:panelGrid>
+
+                            <p:panelGrid  columns="3" rendered="#{not empty home.current}"  style="width: 98% ;margin-top:7px" >
+                                <h:outputText value="AREA" style="font-weight: bold" />
+                                <h:outputText value="ACTIVIDAD" style="font-weight: bold" />
+                                <h:outputText value="RESPONSABLE OPERACION"  style="font-weight: bold"/>
+
+                                <h:outputText value="#{home.current.equipoIdequipo.lugarIdlugar.nombre}" />
+                                <h:outputText value="#{home.current.actividad}" />
+                                <h:outputText value="#{home.current.encargado}" />
+
+
+                            </p:panelGrid>
+
+                            <p:panelGrid  columns="1" rendered="#{not empty home.current}"  style="width: 98% ;margin-top:7px" >
+                                <h:outputText value="DESCRIPCION" style="font-weight: bold" />
+                                <h:outputText value="#{home.current.descripcion}" />
+                            </p:panelGrid>
+
+                            <p:dataTable var="car" value="#{home.detallesList}" style="margin-top: 12px" reflow="true">
+                                <f:facet name="header">
+                                    OBSERVACIONES
+                                </f:facet>
+
+                                <p:column headerText="Parametro">
+                                    <h:outputText value="#{car.parametro}" />
+                                </p:column>
+
+                                <p:column headerText="Valor">
+                                    <h:outputText value="#{car.valor}" />
+                                </p:column>
+                            </p:dataTable>
+
+                            <p:dataTable var="foto" value="#{home.fotosList}" style="margin-top: 12px;margin-bottom: 12px" reflow="true">
+                                <f:facet name="header">
+                                    PROCEDIMIENTO
+                                </f:facet>
+
+
+                                <p:column headerText="ACCION" style="padding: 3px">
+
+                                    <div class="row" style="margin-bottom: 7px;margin-left: 3px;margin-right: 3px">
+
+                                        <h4> <h:outputText value="#{foto.titulo}" /></h4>
+
+                                    </div>
+                                    <div class="row" style="padding: 5px ;margin-left: 3px;margin-right: 3px">
+
+                                        <p:column style="padding-left: 5px;padding-right: 5px;">
+                                            <h:outputText value="#{foto.descripcion}" />
+                                        </p:column>
+                                    </div>
+
+
+                                </p:column>
+
+                                <p:column headerText="IMAGENES">
+                                    <!--test: http://mantenimiento-contactres.rhcloud.com/MantenimientoRest/webresources/com.mim.entities.fotos/api/-->
+                                    <!-- cemex: http://cemex-5266592.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/ -->
+                                    <!-- cerve: http://env-5002349.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/ -->
+                                    <p:graphicImage style="width: 80%" value="http://cemex-5266592.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/#{foto.idfotos}"/>
+                                </p:column>
+                            </p:dataTable>
+
+                            <p:commandButton style="padding: 20px !important;margin-bottom: 15px;"  value="DESCARGAR REPORTE" action="#{home.buildReport}" ajax="false">
+                                <f:setPropertyActionListener value="#{home.current.idorden}"  
+                                                             target="#{home.ordenId}" />  
+                            </p:commandButton>
+                            <!-- http://slim-5995408.jl.serv.net.mx/slim/ReportGen?reportid= -->
+                           
+                        </p:scrollPanel>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+
+
+        </ui:composition>
+    </h:body>
+</html>
+

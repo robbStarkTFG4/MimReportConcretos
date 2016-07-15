@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <title>MIM Mantenimiento</title>
+
+        <link href="css/bootstrap.min.css" rel="stylesheet"></link>
+        <link href="css/datepicker3.css" rel="stylesheet"></link>
+        <link href="css/styles.css" rel="stylesheet"></link>
+
+        <!--Icons-->
+        <script src="js/lumino.glyphs.js"></script>
+
+        <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
+
+
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/chart.min.js"></script>
+        <script src="js/chart-data.js"></script>
+        <script src="js/easypiechart.js"></script>
+        <script src="js/easypiechart-data.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>
+
+        <f:event listener="#{login.isAdmin}" type="preRenderView" />
+
+    </h:head>
+
+    <h:body>
+
+        <div id="top" >
+            <ui:insert name="top">
+                <h:form>
+
+
+                    <p:idleMonitor timeout="300000">
+                        <p:ajax  event="idle" listener="#{login.onIdle}" />                     
+                    </p:idleMonitor>
+                    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#"><span>MIM</span> Concretos</a>
+                                <ul class="user-menu">
+                                    <li class="dropdown pull-right">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"></svg> Usuario <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <!--<li><a href="javascript:logout()">cerrar sesion</a></li>-->
+                                            <p:commandLink style="padding: 7px 15px;color: black !important" value="cerrar sesion" styleClass="" action="#{login.logOut()}"/>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div><!-- /.container-fluid -->
+                    </nav>
+                    <pe:remoteCommand id="logOutCommand" name="logout" process="@this"  
+                                      actionListener="#{login.logOut()}"></pe:remoteCommand>  
+                </h:form>
+            </ui:insert>
+        </div>
+
+        <div id="left" >
+            <ui:insert name="left">
+
+                <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+                    <form role="search">
+                        <div class="form-group">
+
+                        </div>
+                    </form>
+
+                    <h:form>
+                        <ul class="nav menu">
+                            <!--class="active"-->
+                            <li ><a href="javascript:goHome()"><svg class="glyph stroked dashboard-dial"></svg> HOME</a></li>
+
+                            <li class="parent " style="display: #{orden.zonaQuintanaRoo ? 'list-item' : 'none'};">
+                                <a href="#">
+                                    <span data-toggle="collapse" href="#sub-item-1"> <svg class="glyph stroked chevron-down"><use href="#stroked-chevron-down"></use></svg>  Quintana Roo </span> 
+                                </a>
+                                <ul class="children collapse" id="sub-item-1">
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD0665')">
+                                            PD0665
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD0300')">
+                                            PD0300
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD057')">
+                                            PD057
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD442')">
+                                            PD442
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="parent "  style="display: #{orden.zonaTabasco ? 'list-item' : 'none'};">
+                                <a href="#">
+                                    <span data-toggle="collapse" href="#sub-item-12"><svg class="glyph stroked chevron-down"><use href="#stroked-chevron-down"></use></svg>  Tabasco</span>  
+                                </a>
+                                <ul class="children collapse" id="sub-item-12">
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD477')">
+                                            PD477
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD327')">
+                                            PD327
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD183')">
+                                            PD183
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD268')">
+                                            PD268
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD402')">
+                                            PD402
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="javascript:applyData('PD471')">
+                                            <use ></use> PD471
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this"  
+                                              actionListener="#{orden.execute}">  
+
+                                <pe:assignableParam name="linea" assignTo="#{orden.currentLine}"/>  
+
+                            </pe:remoteCommand>  
+
+                            <pe:remoteCommand id="homeCommand" name="goHome" process="@this"  
+                                              actionListener="#{orden.homePage}">  
+                            </pe:remoteCommand>  
+
+                        </ul>
+                    </h:form>
+                </div><!--/.sidebar-->
+
+            </ui:insert>
+        </div>
+
+        <div id="content" >
+            <ui:insert name="content">
+                <h:form id="orderForm">
+                    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+                        <div class="row">
+
+
+                        </div>
+                    </div>
+                </h:form>
+
+            </ui:insert>
+        </div>
+
+    </h:body>
+
+</html>
