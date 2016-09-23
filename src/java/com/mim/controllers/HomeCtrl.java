@@ -341,22 +341,26 @@ public class HomeCtrl implements Serializable {
                 for (int i = 0; i < observaciones.size(); i++) {
                     HistorialDetalles historial = observaciones.get(i);
 
-                    PdfPCell paramCell = new PdfPCell();
-                    paramCell.setColspan(3);
-                    paramCell.addElement(new Paragraph(historial.getParametro()));
-                    paramCell.setVerticalAlignment(Element.ALIGN_CENTER);
-                    paramCell.setPaddingLeft(10);
-                    paramCell.setPaddingBottom(10);
+                    if(historial.getValor()!=null){
+                        if(historial.getValor().length()>0){
+                          PdfPCell paramCell = new PdfPCell();
+                         paramCell.setColspan(3);
+                        paramCell.addElement(new Paragraph(historial.getParametro()));
+                        paramCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                       paramCell.setPaddingLeft(10);
+                         paramCell.setPaddingBottom(10);
 
-                    PdfPCell valueParamCell = new PdfPCell();
-                    valueParamCell.setColspan(5);
-                    valueParamCell.setPaddingLeft(10);
-                    valueParamCell.setVerticalAlignment(Element.ALIGN_CENTER);
-                    valueParamCell.addElement(new Paragraph(historial.getValor()));
-                    valueParamCell.setPaddingBottom(10);
+                        PdfPCell valueParamCell = new PdfPCell();
+                         valueParamCell.setColspan(5);
+                        valueParamCell.setPaddingLeft(10);
+                         valueParamCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                        valueParamCell.addElement(new Paragraph(historial.getValor()));
+                          valueParamCell.setPaddingBottom(10);
 
-                    table.addCell(paramCell);
-                    table.addCell(valueParamCell);
+                         table.addCell(paramCell);
+                         table.addCell(valueParamCell);
+                        }
+                    }
                 }
             }
         }

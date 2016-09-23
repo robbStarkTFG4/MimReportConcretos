@@ -1,19 +1,26 @@
 quintana roo
 
-PD0665
-PD0300
-PD057
-PD442
+PD0665x
+PD0300x
+PD057x
+PD442x
+
+PD304*
+PD109*
 
 
 villahermosa
 
-PD477
-PD327
-PD183
-PD268
-PD402
-PD471
+PD477x
+PD327x
+PD183x
+PD268x
+PD402x
+PD471x
+
+PD403*
+
+PD294*
 
 
 //cemex database

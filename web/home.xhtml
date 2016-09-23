@@ -104,11 +104,11 @@
                                     OBSERVACIONES
                                 </f:facet>
 
-                                <p:column headerText="Parametro">
+                                <p:column headerText="Parametro" rendered="#{not empty car.valor }">
                                     <h:outputText value="#{car.parametro}" />
                                 </p:column>
 
-                                <p:column headerText="Valor">
+                                <p:column headerText="Valor" rendered="#{not empty car.valor }">
                                     <h:outputText value="#{car.valor}" />
                                 </p:column>
                             </p:dataTable>
