@@ -76,4 +76,12 @@ public class OrdenFacade extends AbstractFacade<Orden> {
         return (Long) query.getSingleResult();
     }
 
+    public Orden findOrder(String id) {
+        TypedQuery<Orden> query = em.createQuery("SELECT c FROM Orden c WHERE c.idorden = :id", Orden.class);
+        query.setParameter("id", Integer.parseInt(id));
+        Orden res = query.getSingleResult();
+        res.getHistorialDetallesList().size();
+        res.getFotosList().size();
+        return res;
+    }
 }
