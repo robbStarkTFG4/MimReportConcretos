@@ -6,6 +6,7 @@
 package com.mim.session;
 
 import com.mim.models.Fotos;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -34,7 +35,34 @@ public class FotosFacade extends AbstractFacade<Fotos> {
     public List<Fotos> findAllByOrder(Integer idorden) {
         TypedQuery<Fotos> query = em.createQuery("SELECT c FROM Fotos c WHERE c.ordenIdorden.idorden = :id", Fotos.class);
         query.setParameter("id", idorden);
-        return query.getResultList();
+        List<Fotos> list = query.getResultList();
+        List<Fotos> res = new ArrayList<>();
+
+        for (Fotos ft : list) {
+            if (ft.getArchivo().contains(".jpg")) {
+                res.add(ft);
+            }
+        }
+        return res;
+    }
+
+    public List<Fotos> findVids(Integer idorden) {
+        TypedQuery<Fotos> query = em.createQuery("SELECT c FROM Fotos c WHERE c.ordenIdorden.idorden = :id", Fotos.class);
+        query.setParameter("id", idorden);
+        List<Fotos> list = query.getResultList();
+        List<Fotos> res = new ArrayList<>();
+
+        for (Fotos ft : list) {
+            if (ft.getArchivo().contains(".MP4")) {
+                res.add(ft);
+            }
+        }
+        return res;
+    }
+
+    public void persistMediaDesChange(Fotos get, String string) {
+        Fotos ft=this.find(get.getIdfotos());
+        ft.setDescripcion(string);
     }
 
 }

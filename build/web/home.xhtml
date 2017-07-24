@@ -14,7 +14,7 @@
 
 
             <ui:define name="content">
-                <h:form id="homeForm">
+                <h:form id="homeForm" >
 
                     <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
 
@@ -46,8 +46,11 @@
                                 <p:ajax event="rowSelect" listener="#{home.onRowSelect}" oncomplete="PF('carDialog').show()" update="homeForm:dialogito"  />
 
                                 <p:column headerText="Numero">
-                                    <h:outputText value="#{order.numeroOrden}" />
+                                    <h:outputText value="#{order.idorden}" />
                                     <h:outputText  />
+                                </p:column>
+                                <p:column headerText="Lugar">
+                                    <h:outputText value="#{order.equipoIdequipo.lugarIdlugar.nombre}" />
                                 </p:column>
                                 <p:column headerText="Fecha">
                                     <h:outputText value="#{order.startDate}" />
@@ -113,43 +116,82 @@
                                 </p:column>
                             </p:dataTable>
 
-                            <p:dataTable var="foto" value="#{home.fotosList}" style="margin-top: 12px;margin-bottom: 12px" reflow="true">
-                                <f:facet name="header">
-                                    PROCEDIMIENTO
-                                </f:facet>
+                            <p:tabView id="tabHolder">
+                                <p:ajax event="tabChange" listener="#{home.onTabChange}" />
+                                <p:tab title="Imagenes">
+                                    <p:dataTable var="foto" value="#{home.fotosList}" style="margin-top: 12px;margin-bottom: 12px" reflow="true" editable="#{home.allowEdit}" editMode="cell">
+                                        <f:facet name="header">
+                                            PROCEDIMIENTO
+                                        </f:facet>
 
+                                        <p:ajax event="cellEdit" listener="#{home.onCellEditPhotos}"  />
 
-                                <p:column headerText="ACCION" style="padding: 3px">
-
-                                    <div class="row" style="margin-bottom: 7px;margin-left: 3px;margin-right: 3px">
-
-                                        <h4> <h:outputText value="#{foto.titulo}" /></h4>
-
-                                    </div>
-                                    <div class="row" style="padding: 5px ;margin-left: 3px;margin-right: 3px">
-
-                                        <p:column style="padding-left: 5px;padding-right: 5px;">
-                                            <h:outputText value="#{foto.descripcion}" />
+                                        <p:column headerText="ACCION" style="padding: 3px;width: 20%">
+                                            <h:outputText value="#{foto.titulo}" />
                                         </p:column>
-                                    </div>
+
+                                        <p:column headerText="DESCRIPCION" style="padding: 3px;width: 40%">
 
 
-                                </p:column>
+                                            <p:cellEditor>
+                                                <f:facet name="output"><h:outputText value="#{foto.descripcion}" /></f:facet>
+                                                <f:facet name="input"><p:inputText value="#{foto.descripcion}" style="width:96%" label="descripcion"/></f:facet>
+                                            </p:cellEditor>
 
-                                <p:column headerText="IMAGENES">
-                                    <!--test: http://mantenimiento-contactres.rhcloud.com/MantenimientoRest/webresources/com.mim.entities.fotos/api/-->
-                                    <!-- cemex: http://cemex-5266592.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/ -->
-                                    <!-- cerve: http://env-5002349.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/ -->
-                                    <p:graphicImage style="width: 80%" value="http://cemex-5266592.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/#{foto.idfotos}"/>
-                                </p:column>
-                            </p:dataTable>
+
+
+                                        </p:column>
+
+                                        <p:column headerText="IMAGENES" >
+                                            <!--test: http://mantenimiento-contactres.rhcloud.com/MantenimientoRest/webresources/com.mim.entities.fotos/api/-->
+                                            <!-- cemex: http://cemex-5266592.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/ -->
+                                            <!-- cerve: http://env-5002349.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/ -->
+                                            <p:graphicImage style="width: 80%" value="http://cemex-5266592.jl.serv.net.mx/rest/webresources/com.mim.entities.fotos/api/#{foto.idfotos}"/>
+                                        </p:column>
+                                    </p:dataTable> 
+                                </p:tab>
+                                <p:tab title="Videos" id="vidTab">
+                                    <p:dataTable id="tablilla" var="vid" value="#{home.videosList}" style="margin-top: 12px;margin-bottom: 12px" reflow="true">
+                                        <f:facet name="header">
+                                            PROCEDIMIENTO
+                                        </f:facet>
+
+
+                                        <p:column headerText="ACCION" style="padding: 3px">
+
+                                            <div class="row" style="margin-bottom: 7px;margin-left: 3px;margin-right: 3px">
+
+                                                <h4> <h:outputText value="#{vid.titulo}" /></h4>
+
+                                            </div>
+                                            <div class="row" style="padding: 5px ;margin-left: 3px;margin-right: 3px">
+
+                                                <p:column style="padding-left: 5px;padding-right: 5px;">
+                                                    <h:outputText value="#{vid.descripcion}" />
+                                                </p:column>
+                                            </div>
+
+
+                                        </p:column>
+
+                                        <p:column headerText="VIDEO">
+                                            <h:commandLink value="Open in new window" action="#{home.reproduce}" target="_blank"  >
+                                                <f:setPropertyActionListener value="#{vid.archivo}" target="#{home.rutilla}"/>
+                                            </h:commandLink>  
+                                            <source src="http://cemex-5266592.jl.serv.net.mx/rest/webresources/videoGeneric/ruta/#{vid.archivo}" type="video/mp4"></source>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:tab>
+                            </p:tabView>
+
 
                             <p:commandButton style="padding: 20px !important;margin-bottom: 15px;"  value="DESCARGAR REPORTE" action="#{home.buildReport}" ajax="false">
                                 <f:setPropertyActionListener value="#{home.current.idorden}"  
                                                              target="#{home.ordenId}" />  
                             </p:commandButton>
                             <!-- http://slim-5995408.jl.serv.net.mx/slim/ReportGen?reportid= -->
-                           
+
                         </p:scrollPanel>
                     </p:dialog>
                 </h:form>

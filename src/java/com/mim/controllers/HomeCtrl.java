@@ -5,6 +5,8 @@
  */
 package com.mim.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -23,8 +25,11 @@ import com.mim.models.Orden;
 import com.mim.session.FotosFacade;
 import com.mim.session.HistorialDetallesFacade;
 import com.mim.session.OrdenFacade;
+import com.mim.util.Authorized;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -39,7 +44,10 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -54,6 +62,7 @@ public class HomeCtrl implements Serializable {
 
     private List<HistorialDetalles> detallesList;
     private List<Fotos> fotosList;
+    private List<Fotos> videosList;
 
     private long cantidad;
     private String ordenId;
@@ -69,7 +78,9 @@ public class HomeCtrl implements Serializable {
 
     @Inject
     OrdenCtrl ordenCtrl;
+    
     private Equipo equipo;
+    private String rutilla;
 
     @PostConstruct
     private void init() {
@@ -82,6 +93,7 @@ public class HomeCtrl implements Serializable {
         System.out.println(current.getDescripcion());
         detallesList = hisFacade.findAllByOrder(current.getIdorden());
         fotosList = fotoFacade.findAllByOrder(current.getIdorden());
+        videosList=fotoFacade.findVids(current.getIdorden());
     }
 
     public String buildReport() {
@@ -462,7 +474,61 @@ public class HomeCtrl implements Serializable {
         document.newPage();
         document.add(table2);
     }
+    
+     public void onTabChange(TabChangeEvent event) {
+         String id= event.getTab().getId();
+         if(id.contains("vidTab")){
+             RequestContext.getCurrentInstance().update(":homeForm:tabHolder:vidTab:tablilla");
+             RequestContext.getCurrentInstance().execute("alert(\"Hello! I am an alert box!!\");");
+         }
+    }
 
+      public void onCellEditPhotos(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         //fotosList.get(event.getRowIndex())
+        if(newValue != null && !newValue.equals(oldValue)) {
+           // persist change
+            fotoFacade.persistMediaDesChange(fotosList.get(event.getRowIndex()),(String)newValue);
+        }
+    }
+      
+       public void onCellEditVideos(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         //fotosList.get(event.getRowIndex())
+        if(newValue != null && !newValue.equals(oldValue)) {
+           // persist change
+           fotoFacade.persistMediaDesChange(fotosList.get(event.getRowIndex()),(String)newValue);
+        }
+    }
+      
+
+   
+       public boolean isAllowEdit() {
+            String usuario = ordenCtrl.getUser().getUsuario();
+            JsonReader reader = new JsonReader(new BufferedReader(new InputStreamReader(HomeCtrl.class.getResourceAsStream("allowed.json"))));
+            Gson gson = new Gson();
+            Authorized res = gson.fromJson(reader, Authorized.class);
+            for (String arg : res.getLista()) {
+                System.out.println("lista autorizados: "+arg);
+               if(usuario.equals(arg))return true;
+            }
+            return false;
+       }
+       
+     public String reproduce(){
+         return "videoTest2.xhtml?faces-redirect=true&paramName="+rutilla;
+     }
+
+    public String getRutilla() {
+        return rutilla;
+    }
+
+    public void setRutilla(String rutilla) {
+        this.rutilla = rutilla;
+    }
+     
     public List<Orden> getRecentOrders() {
         return recentOrders;
     }
@@ -489,6 +555,10 @@ public class HomeCtrl implements Serializable {
 
     public String getOrdenId() {
         return ordenId;
+    }
+
+    public List<Fotos> getVideosList() {
+        return videosList;
     }
 
     public void setOrdenId(String ordenId) {
