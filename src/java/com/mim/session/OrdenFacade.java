@@ -20,19 +20,19 @@ import javax.persistence.TypedQuery;
  */
 @Stateless
 public class OrdenFacade extends AbstractFacade<Orden> {
-
+    
     @PersistenceContext(unitName = "envasadoPU")
     private EntityManager em;
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
     public OrdenFacade() {
         super(Orden.class);
     }
-
+    
     public List<Orden> findAll(String linea) {
         TypedQuery<Orden> query = em.createQuery("SELECT c FROM Orden c WHERE c.equipoIdequipo.lugarIdlugar.nombre = :name and c.numeroOrden != :tag AND c.endDate IS NOT NULL ORDER BY c.startDate DESC", Orden.class);
         query.setParameter("name", linea);
@@ -41,7 +41,7 @@ public class OrdenFacade extends AbstractFacade<Orden> {
         // Collections.reverse(res);
         return res;
     }
-
+    
     public List<Orden> findAllImprovements(String linea) {
         TypedQuery<Orden> query = em.createQuery("SELECT c FROM Orden c WHERE c.equipoIdequipo.lugarIdlugar.nombre = :name and c.numeroOrden = :tag  AND c.endDate IS NOT NULL ORDER BY c.startDate DESC", Orden.class);
         query.setParameter("name", linea);
@@ -50,7 +50,7 @@ public class OrdenFacade extends AbstractFacade<Orden> {
         // Collections.reverse(res);
         return res;
     }
-
+    
     public List<Orden> findARecent(Usuario user) {
         if ((user.getQuintana() == 1) && (user.getTabasco() == 1)) {
             TypedQuery<Orden> query = em.createQuery("SELECT c FROM Orden c  WHERE c.endDate IS NOT NULL ORDER BY c.idorden DESC", Orden.class);
@@ -70,12 +70,12 @@ public class OrdenFacade extends AbstractFacade<Orden> {
             return null;
         }
     }
-
+    
     public long countValid() {
         Query query = em.createQuery("SELECT COUNT(c.idorden) FROM Orden c WHERE c.endDate IS NOT NULL");
         return (Long) query.getSingleResult();
     }
-
+    
     public Orden findOrder(String id) {
         TypedQuery<Orden> query = em.createQuery("SELECT c FROM Orden c WHERE c.idorden = :id", Orden.class);
         query.setParameter("id", Integer.parseInt(id));
@@ -83,5 +83,12 @@ public class OrdenFacade extends AbstractFacade<Orden> {
         res.getHistorialDetallesList().size();
         res.getFotosList().size();
         return res;
+    }
+    
+    public void saveDescription(Orden current) {
+        TypedQuery<Orden> query = em.createQuery("SELECT c FROM Orden c WHERE c.idorden = :id", Orden.class);
+        query.setParameter("id", current.getIdorden());
+        Orden res = query.getSingleResult();
+        res.setDescripcion(current.getDescripcion());
     }
 }

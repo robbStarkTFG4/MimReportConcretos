@@ -98,8 +98,13 @@
                             </p:panelGrid>
 
                             <p:panelGrid  columns="1" rendered="#{not empty home.current}"  style="width: 98% ;margin-top:7px" >
-                                <h:outputText value="DESCRIPCION" style="font-weight: bold" />
-                                <h:outputText value="#{home.current.descripcion}" />
+
+                                <h:outputText value="#{home.current.descripcion}" rendered="#{! home.allowEdit}" />
+                                <p:inplace editor="true"  rendered="#{home.allowEdit}">
+                                    <p:ajax event="save" listener="#{home.handleSave}"  />
+                                    <h:inputText value="#{home.current.descripcion}" />
+                                </p:inplace>
+
                             </p:panelGrid>
 
                             <p:dataTable var="car" value="#{home.detallesList}" style="margin-top: 12px" reflow="true">

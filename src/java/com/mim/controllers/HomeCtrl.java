@@ -520,6 +520,11 @@ public class HomeCtrl implements Serializable {
      public String reproduce(){
          return "videoTest2.xhtml?faces-redirect=true&paramName="+rutilla;
      }
+     
+     public void handleSave(){
+         System.out.println(current.getDescripcion());
+         ordenFacade.saveDescription(current);
+     }
 
     public String getRutilla() {
         return rutilla;
